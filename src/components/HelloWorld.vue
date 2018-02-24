@@ -1,6 +1,5 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
     <button v-on:click="login()">Login</button>
     <table>
       <tr>
@@ -28,18 +27,17 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { db } from '../main'
 import firebase from 'firebase'
 import NewPerson from './NewPerson.vue'
 import { mapGetters, mapActions } from 'vuex'
 
-console.log(Object.assign({}, {'one': 1, 'two':2}, {'THREE': 3}))
 console.log(mapActions(['startEditing']))
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       people: [],
       editing: null,
       addingNew: false,
@@ -55,51 +53,61 @@ export default {
     'newPerson': NewPerson
   },
   computed: mapGetters([
-      'isEditing'
-    ]),
-  methods: Object.assign({}, 
+    'isEditing'
+  ]),
+  methods: Object.assign({},
     mapActions(['startEditing']),
     {
-    connect: function (event) {
-      this.$router.app.$firebaseRefs.anArray.push({
-        text: 'hello'
-      })
-    },
-    login: function (event) {
-      var provider = new firebase.auth.GoogleAuthProvider()
-      firebase.auth().signInWithPopup(provider).then(function (result) {
-        // Can access google token from here if needed
-      }).catch(function (error) {
-        // Can do something about the error here
-        console.log(error)
-      })
-    },
-    edit: function (person) {
-      this.$data.editing = person['.key']
-    },
-    editingPerson: function (person) {
-      return person['.key'] === this.$data.editing
-    },
-    saveEdit: function (person) {
-      const firebasePeople = this.$data.people.map(function (person) {
-        return {name: person.name, rotation: person.rotation}
-      })
-      this.$firebaseRefs.people.set(firebasePeople)
-      this.$data.editing = null
-    },
-    showNew: function () {
-      this.$firebaseRefs.people.push({
-        name: 'newPerson',
-        rotation: 0
-      })
-    },
-    deletePerson: function (person) {
-      this.$firebaseRefs.people.child(person['.key']).remove()
-    },
-    shoot: function (person) {
-
+      connect: function (event) {
+        this.$router.app.$firebaseRefs.anArray.push({
+          text: 'hello'
+        })
+      },
+      login: function (event) {
+        var provider = new firebase.auth.GoogleAuthProvider()
+        firebase.auth().signInWithPopup(provider).then(function (result) {
+          // Can access google token from here if needed
+        }).catch(function (error) {
+          // Can do something about the error here
+          console.log(error)
+        })
+      },
+      edit: function (person) {
+        this.$data.editing = person['.key']
+      },
+      editingPerson: function (person) {
+        return person['.key'] === this.$data.editing
+      },
+      saveEdit: function (person) {
+        const firebasePeople = this.$data.people.map(function (person) {
+          return {name: person.name, rotation: person.rotation}
+        })
+        this.$firebaseRefs.people.set(firebasePeople)
+        this.$data.editing = null
+      },
+      showNew: function () {
+        this.$firebaseRefs.people.push({
+          name: 'newPerson',
+          rotation: 0
+        })
+      },
+      deletePerson: function (person) {
+        this.$firebaseRefs.people.child(person['.key']).remove()
+      },
+      shoot: function (person) {
+        Vue.http.post('https://cyormhgc0l.execute-api.eu-west-1.amazonaws.com/prod/',
+          {name: person.name},
+          {headers: {
+            'x-api-key': 'tIIVFTUPA89L8Roz46CBL4vnCW4BWKcQ6pkvvvmY',
+            'Content-Type': 'application/json'
+          }}
+        ).then(response => {
+          console.log('It only went and worked!!')
+          console.log(response)
+        })
+      }
     }
-  })
+  )
 }
 </script>
 

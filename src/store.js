@@ -12,7 +12,7 @@ const mutations = {
     state.editing = true
   },
   stopEditing (state) {
-  	state.editing = false
+    state.editing = false
   }
 }
 

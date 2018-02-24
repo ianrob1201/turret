@@ -15,13 +15,12 @@
         <td colspan="2"><div>Provide new user's details</div></td>
       </tr>
     </table>
-    
   </div>
 </template>
 
 <script>
 import PersonIcon from './PersonIcon.vue'
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'NewPerson',
@@ -35,20 +34,21 @@ export default {
   components: {
     'personIcon': PersonIcon
   },
-  methods: Object.assign({}, 
+  methods: Object.assign({},
     mapActions(['stopEditing']),
     {
-    add: function () {
-      this.$router.app.$firebaseRefs.people.push({
-        name: this.$data.fullname,
-        rotation: this.$data.rotation
-      })
-      this.stopEditing()
-    },
-    svg: function () {
+      add: function () {
+        this.$router.app.$firebaseRefs.people.push({
+          name: this.$data.fullname,
+          rotation: this.$data.rotation
+        })
+        this.stopEditing()
+      },
+      svg: function () {
 
+      }
     }
-  }),
+  ),
   computed: {
     initials: function () {
       return this.$data.fullname.split(' ').map(x => x.charAt(0)).join('').toUpperCase()

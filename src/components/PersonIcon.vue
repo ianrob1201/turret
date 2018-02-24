@@ -8,12 +8,12 @@
 </template>
 
 <script>
-	export default {
-	  name: 'PersonIcon',
-	  props: [
-		  'initials'
-	  ]
-	}
+export default {
+  name: 'PersonIcon',
+  props: [
+    'initials'
+  ]
+}
 </script>
 
 <style scoped>

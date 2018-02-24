@@ -6,11 +6,13 @@ import router from './router'
 import VueFire from 'vuefire'
 import firebase from 'firebase'
 import store from './store'
+import VueResource from 'vue-resource'
 
 Vue.config.productionTip = false
 
 // explicit installation required in module environments
 Vue.use(VueFire)
+Vue.use(VueResource)
 
 const config = {
   apiKey: 'AIzaSyCKH7DVvs-Rpx9pto7X2jVG8c9f05_K21E',
@@ -22,7 +24,6 @@ const config = {
 }
 firebase.initializeApp(config)
 export const db = firebase.database()
-
 
 /* eslint-disable no-new */
 new Vue({
