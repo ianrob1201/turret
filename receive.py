@@ -1,31 +1,51 @@
 import json
 import boto3
-import usb.core
-import usb.util
+import sys
+import yaml
+from time import sleep
 from firebase import firebase
+import serial
+
 
 firebase = firebase.FirebaseApplication('https://turret-a2f8e.firebaseio.com/', None)
 
-def getRotation(name):
+def sendCommand(command):
+    ser.write(command + "\n")
+
+def getValue(name, field):
     result = firebase.get('/people', None)
-    matches = [x for x in result if x['name']==name]
-    return matches[0]['rotation']
+    jsonResult = yaml.load(json.dumps(result))
+    for x in jsonResult:
+        if x['name'] == name:
+            return x[field]
+    return 90
 
-def setupUsb():
-    dev = usb.core.find(idVendor=0x0403, idProduct=0x6001)
-    dev.set_configuration()
-    cfg = dev.get_active_configuration()
-    intf = cfg[(0,0)]
+def rotate(json):
+    pan = getValue(json.loads(message.body)['name'], 'pan')
+    tilt = getValue(json.loads(message.body)['name'], 'tilt')
+    # Print out the body and author (if set)
+    print(pan)
+    print(tilt)
+    rotate = "ROTATE:" + pan + ":" + tilt
+    print(rotate)
+    sendCommand(rotate)
+    sleep(1)
 
-    ep = usb.util.find_descriptor(
-        intf,
-        # match the first OUT endpoint
-        custom_match = lambda e: usb.util.endpoint_direction(e.bEndpointAddress) == usb.util.ENDPOINT_OUT)
+def shoot():
+    sendCommand("SHOOT")
+    sleep(1)
 
-    assert ep is not None
-    ep.write('LASER')
+def centre():
+    sendCommand("ROTATE:90:90")
 
-setupUsb()
+
+
+ser = serial.Serial('/dev/ttyUSB0', 9600)
+print(ser.name)
+print(ser.readline())
+# sendCommand('LASER')
+
+# sys.exit()
 
 sqs = boto3.resource('sqs')
 queue = sqs.get_queue_by_name(QueueName='turret')
@@ -33,11 +53,15 @@ queue = sqs.get_queue_by_name(QueueName='turret')
 print('Checking for messages. Ctrl-C to exit...')
 while (True):
     # Process messages by printing out body and optional author name
-    for message in queue.receive_messages(MessageAttributeNames=['Author']):
-        
-        rotation = getRotation(json.loads(message.body)['name'])
-        # Print out the body and author (if set)
-        print('Set rotation to {0}'.format(rotation))
-
+    for message in queue.receive_messages(MessageAttributeNames=['Author']):      
+        command = json.loads(message.body)['command']
+        if (command == 'SHOOT'):
+            rotate(json)
+            shoot()
+            centre()
+        elif (command == 'AIM' ):
+            rotate(json)
+        elif (command == 'CUSTOM' ):
+            sendCommand(json.loads(message.body)['customCommand'].encode('ascii','ignore'))
         # Let the queue know that the message is processed
         message.delete()

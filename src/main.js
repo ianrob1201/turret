@@ -22,8 +22,11 @@ const config = {
   storageBucket: '',
   messagingSenderId: '327517409294'
 }
-firebase.initializeApp(config)
+const firebaseApp = firebase.initializeApp(config)
 export const db = firebase.database()
+export const peopleRef = firebaseApp.database().ref().child('people')
+console.log("REF")
+console.log(peopleRef)
 
 /* eslint-disable no-new */
 new Vue({

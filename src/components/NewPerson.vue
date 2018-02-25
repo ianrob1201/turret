@@ -8,8 +8,12 @@
         <td rowspan="3"><personIcon v-bind:initials="initials" v-if="initials"/></td>
       </tr>
       <tr>
-        <td><div class="label">Rotation</div></td>
-        <td><input type="text" v-model="rotation"/></td>
+        <td><div class="label">Pan</div></td>
+        <td><input type="text" v-model="pan"/></td>
+      </tr>
+      <tr>
+        <td><div class="label">Tilt</div></td>
+        <td><input type="text" v-model="tilt"/></td>
       </tr>
       <tr>
         <td colspan="2"><div>Provide new user's details</div></td>
@@ -21,14 +25,16 @@
 <script>
 import PersonIcon from './PersonIcon.vue'
 import { mapActions } from 'vuex'
+import { peopleRef } from '../main'
 
 export default {
   name: 'NewPerson',
-  props: ['visible', 'newPerson'],
+  props: ['visible', 'newPerson', 'nextIndex'],
   data () {
     return {
       fullname: '',
-      rotation: 0
+      pan: "90",
+      tilt: "90"
     }
   },
   components: {
@@ -38,10 +44,15 @@ export default {
     mapActions(['stopEditing']),
     {
       add: function () {
-        this.$router.app.$firebaseRefs.people.push({
+        console.log(this)
+        peopleRef.child(this.$options.propsData.nextIndex).set({
+        // this.$router.app.$firebaseRefs.people.child('100').value({
           name: this.$data.fullname,
-          rotation: this.$data.rotation
+          pan: this.$data.pan,
+          tilt: this.$data.tilt
         })
+        console.log("ADDING2")
+        console.log(this.$router.app.$firebaseRefs.people)
         this.stopEditing()
       },
       svg: function () {
