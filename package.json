@@ -8,7 +8,7 @@
     "dev": "webpack-dev-server --public raspberrypi:8080 --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
-    "build": "node build/build.js"
+    "build": "node build/build.js; cp dist/* /var/www/html/"
   },
   "dependencies": {
     "firebase": "^4.10.1",

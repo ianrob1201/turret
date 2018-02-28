@@ -72,11 +72,6 @@ export default {
   methods: Object.assign({},
     mapActions(['startEditing']),
     {
-      connect: function (event) {
-        this.$router.app.$firebaseRefs.anArray.push({
-          text: 'hello'
-        })
-      },
       login: function (event) {
         var provider = new firebase.auth.GoogleAuthProvider()
         firebase.auth().signInWithPopup(provider).then(function (result) {
@@ -96,8 +91,6 @@ export default {
         const firebasePeople = this.$data.people.map(function (person) {
           return {name: person.name, pan: person.pan, tilt: person.tilt}
         })
-        console.log("PEOPLE")
-        console.log(firebasePeople)
         this.$firebaseRefs.people.set(firebasePeople)
         this.$data.editing = null
       },
@@ -111,10 +104,7 @@ export default {
             'x-api-key': 'tIIVFTUPA89L8Roz46CBL4vnCW4BWKcQ6pkvvvmY',
             'Content-Type': 'application/json'
           }}
-        ).then(response => {
-          console.log('It only went and worked!!')
-          console.log(response)
-        })
+        )
       },
       aim: function (person) {
         Vue.http.post('https://cyormhgc0l.execute-api.eu-west-1.amazonaws.com/prod/',
@@ -123,10 +113,7 @@ export default {
             'x-api-key': 'tIIVFTUPA89L8Roz46CBL4vnCW4BWKcQ6pkvvvmY',
             'Content-Type': 'application/json'
           }}
-        ).then(response => {
-          console.log('It only went and worked!!')
-          console.log(response)
-        })
+        )
       },
       customCommand: function () {
         Vue.http.post('https://cyormhgc0l.execute-api.eu-west-1.amazonaws.com/prod/',
