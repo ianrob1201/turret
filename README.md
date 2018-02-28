@@ -2,6 +2,39 @@
 
 > A Vue.js project
 
+## Installation on Raspberry PI
+
+* Start with base Raspian image (https://www.raspberrypi.org/downloads/raspbian/) installed onto the PI
+
+* Run the following commands to install dependencies:
+
+```
+sudo pip install boto3
+sudo pip install requests==1.1.0
+sudo pip install python-firebase
+sudo pip install pyyaml
+sudo apt-get install socat
+
+sudo pip install awscli
+aws configure -- Setup AWS API key, region = eu-west-1
+
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+sudo apt-get install apache2
+sudo chmod a+w /var/www/html/
+sudo chmod a+w /var/www/html/index.html
+(Setup Git credentials)
+git clone git@github.com:ianrob1201/turret.git
+cd turret
+npm install
+npm run build
+
+# Setup crontab to run python listener script on reboot
+sudo crontab -e
+# Add line "@reboot python /home/pi/turret/startup.py" to end of file
+```
+
 ## Build Setup
 
 ``` bash

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python receive.py
+python /home/pi/turret/receive.py
