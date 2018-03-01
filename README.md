@@ -16,7 +16,7 @@ sudo pip install pyyaml
 sudo apt-get install socat
 
 sudo pip install awscli
-aws configure -- Setup AWS API key, region = eu-west-1
+sudo aws configure -- Setup AWS API key, region = eu-west-1
 
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs
@@ -29,10 +29,11 @@ git clone git@github.com:ianrob1201/turret.git
 cd turret
 npm install
 npm run build
+mkdir logs
 
 # Setup crontab to run python listener script on reboot
 sudo crontab -e
-# Add line "@reboot python /home/pi/turret/startup.py" to end of file
+# Add line "@reboot sh /home/pi/turret/startup.sh >/home/pi/turret/logs/cronlog 2>&1" to end of file
 ```
 
 ## Build Setup
