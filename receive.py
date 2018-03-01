@@ -16,7 +16,7 @@ def getValue(name, field):
     result = firebase.get('/people', None)
     jsonResult = yaml.load(json.dumps(result))
     for x in jsonResult:
-        if x['name'] == name:
+        if x['name'].upper() == name.upper():
             return x[field]
     return 90
 
@@ -54,7 +54,7 @@ print('Checking for messages. Ctrl-C to exit...')
 while (True):
     # Process messages by printing out body and optional author name
     for message in queue.receive_messages(MessageAttributeNames=['Author']):      
-        command = json.loads(message.body)['command']
+        command = json.loads(message.body)['command'].upper()
         if (command == 'SHOOT'):
             rotate(json)
             shoot()
